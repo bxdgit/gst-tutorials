@@ -8,6 +8,8 @@
 
 本仓库已有分篇笔记：
 
+- [Basic Tutorial 1: Hello World](./basic-tutorial-1-hello-world.md)
+- [Basic Tutorial 2: GStreamer Concepts](./basic-tutorial-2-concepts.md)
 - [Basic Tutorial 3: Dynamic Pipelines](./basic-tutorial-3-dynamic-pipelines.md)
 - [Basic Tutorial 4: Time Management](./basic-tutorial-4-time-management.md)
 - [Basic Tutorial 5: Toolkit Integration](./basic-tutorial-5-toolkit-integration.md)

@@ -113,6 +113,8 @@ GST_DEBUG=2,GST_EVENT:5,GST_SEEK:5 ./bin/basic-tutorial-13
 
 分篇文档：
 
+- [Basic Tutorial 1: Hello World](docs/basic-tutorial/basic-tutorial-1-hello-world.md)
+- [Basic Tutorial 2: GStreamer Concepts](docs/basic-tutorial/basic-tutorial-2-concepts.md)
 - [Basic Tutorial 3: Dynamic Pipelines](docs/basic-tutorial/basic-tutorial-3-dynamic-pipelines.md)
 - [Basic Tutorial 4: Time Management](docs/basic-tutorial/basic-tutorial-4-time-management.md)
 - [Basic Tutorial 5: Toolkit Integration](docs/basic-tutorial/basic-tutorial-5-toolkit-integration.md)
@@ -133,4 +135,3 @@ GST_DEBUG=2,GST_EVENT:5,GST_SEEK:5 ./bin/basic-tutorial-13
 - 有些教程是工具或概念讲解，没有对应 C 源码。
 - 示例中的网络 URI 依赖外部网络和对应插件，离线环境下建议改成本地 `file://` URI。
 - `basic-tutorial-13` 的变速和倒放能力依赖媒体格式、demuxer、decoder 和 source，对本地文件通常更可靠。
-
