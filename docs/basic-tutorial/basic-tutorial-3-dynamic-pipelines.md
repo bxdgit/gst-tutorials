@@ -1,6 +1,6 @@
 # Basic Tutorial 3: Dynamic Pipelines 代码讲解
 
-本文讲解 [src/basic-tutorial-3.c](../src/basic-tutorial-3.c)，对应 GStreamer 官方教程：
+本文讲解 [src/basic-tutorial/basic-tutorial-3.c](../../src/basic-tutorial/basic-tutorial-3.c)，对应 GStreamer 官方教程：
 <https://gstreamer.freedesktop.org/documentation/tutorials/basic/dynamic-pipelines.html?gi-language=c>
 
 这个 demo 的主题是 **动态管线**：有些 element 在创建时并不知道自己会输出什么 pad，只有运行起来、解析到真实媒体流以后，才会动态创建 pad。程序需要监听这些 pad 的出现，再决定是否把它们接入后续管线。
