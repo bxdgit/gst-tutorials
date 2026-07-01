@@ -49,65 +49,113 @@ GStreamer 的核心思想是：
 
 ## 知识图谱总览
 
+原先把所有节点放在一张图里会太密，Markdown 预览时很难看清。这里拆成一个总索引和四张主题图：基础结构、连接与格式、运行时控制、工程化能力。阅读时可以先看总索引，再跳到对应主题图。
+
+### 总索引
+
 ```mermaid
-graph TD
-  A[GStreamer Basic Tutorials] --> B[Pipeline 搭建]
-  A --> C[Pad 与 Caps]
-  A --> D[状态与时钟]
-  A --> E[Bus / Message]
-  A --> F[Query / Event]
-  A --> G[多线程与分支]
-  A --> H[应用接入]
-  A --> I[媒体探测]
-  A --> J[工具与调试]
-  A --> K[平台相关]
+flowchart LR
+  A[GStreamer Basic Tutorials] --> B[基础结构]
+  A --> C[连接与格式]
+  A --> D[运行时控制]
+  A --> E[工程化能力]
 
-  B --> B1[playbin 高级播放]
-  B --> B2[手动创建 element]
-  B --> B3[gst_parse_launch 字符串管线]
+  B --> B1[Pipeline / Element / Pad / Buffer]
+  C --> C1[Pad Availability / Caps / Link]
+  D --> D1[State / Bus / Query / Event]
+  E --> E1[GUI / appsrc-appsink / Tools / Platform]
+```
 
-  C --> C1[Always Pad]
-  C --> C2[Sometimes Pad]
-  C --> C3[Request Pad]
-  C --> C4[Caps Negotiation]
+### 图 1: 基础结构
 
-  D --> D1[NULL / READY / PAUSED / PLAYING]
-  D --> D2[Clock]
-  D --> D3[Buffering]
+```mermaid
+flowchart TD
+  P[Pipeline] --> E[Element]
+  E --> SRC[Source]
+  E --> FILTER[Filter / Converter]
+  E --> SINK[Sink]
 
-  E --> E1[ERROR]
-  E --> E2[EOS]
-  E --> E3[STATE_CHANGED]
-  E --> E4[BUFFERING]
-  E --> E5[CLOCK_LOST]
-  E --> E6[APPLICATION]
+  SRC --> PAD1[src pad]
+  FILTER --> PAD2[sink pad / src pad]
+  SINK --> PAD3[sink pad]
 
-  F --> F1[Position / Duration Query]
-  F --> F2[Seeking Query]
-  F --> F3[Seek Event]
-  F --> F4[Step Event]
+  PAD1 --> BUF[GstBuffer 流动]
+  PAD2 --> BUF
+  BUF --> CAPS[GstCaps 描述格式]
 
-  G --> G1[queue]
-  G --> G2[tee]
-  G --> G3[multiqueue]
+  P --> BIN[Bin]
+  BIN --> PLAYBIN[playbin]
+  BIN --> DECODEBIN[decodebin / uridecodebin]
+```
 
-  H --> H1[GTK Integration]
-  H --> H2[appsrc]
-  H --> H3[appsink]
+### 图 2: 连接与格式
 
-  I --> I1[GstDiscoverer]
-  I --> I2[Tags]
-  I --> I3[Stream Topology]
+```mermaid
+flowchart TD
+  PAD[Pad Availability] --> ALWAYS[Always Pad]
+  PAD --> SOMETIMES[Sometimes Pad]
+  PAD --> REQUEST[Request Pad]
 
-  J --> J1[gst-launch-1.0]
-  J --> J2[gst-inspect-1.0]
-  J --> J3[gst-discoverer-1.0]
-  J --> J4[GST_DEBUG]
-  J --> J5[DOT Graph]
+  ALWAYS --> LINK1[gst_element_link_many]
+  SOMETIMES --> LINK2[pad-added callback]
+  REQUEST --> LINK3[gst_element_request_pad_simple]
 
-  K --> K1[autovideosink / autoaudiosink]
-  K --> K2[glimagesink / d3d11videosink]
-  K --> K3[alsasink / pulsesink / wasapi2sink]
+  CAPS[Caps Negotiation] --> TEMPLATE[Pad Template Caps]
+  CAPS --> QUERY[Query Caps]
+  CAPS --> CURRENT[Current Caps]
+  CAPS --> FILTER[capsfilter]
+
+  LINK1 --> NEG[协商成功后流动 Buffer]
+  LINK2 --> NEG
+  LINK3 --> NEG
+  FILTER --> NEG
+```
+
+### 图 3: 运行时控制
+
+```mermaid
+flowchart TD
+  APP[Application] --> STATE[set_state]
+  STATE --> S1[NULL]
+  STATE --> S2[READY]
+  STATE --> S3[PAUSED]
+  STATE --> S4[PLAYING]
+
+  PIPE[Pipeline / Element] --> BUS[GstBus]
+  BUS --> MSG[Message]
+  MSG --> ERROR[ERROR]
+  MSG --> EOS[EOS]
+  MSG --> STATECHG[STATE_CHANGED]
+  MSG --> BUFFERING[BUFFERING]
+  MSG --> CLOCK[CLOCK_LOST]
+
+  APP --> QUERY[Query]
+  QUERY --> POSITION[position]
+  QUERY --> DURATION[duration]
+  QUERY --> SEEKABLE[seeking]
+
+  APP --> EVENT[Event]
+  EVENT --> SEEK[seek / rate]
+  EVENT --> STEP[step frame]
+```
+
+### 图 4: 工程化能力
+
+```mermaid
+flowchart TD
+  ENG[工程化能力] --> GUI[GUI 集成]
+  ENG --> APPS[appsrc / appsink]
+  ENG --> STREAM[Streaming]
+  ENG --> DISCOVER[GstDiscoverer]
+  ENG --> DEBUG[Debugging]
+  ENG --> PLATFORM[Platform Elements]
+
+  GUI --> THREAD[主线程更新 UI]
+  APPS --> BUFFER[应用读写 GstBuffer]
+  STREAM --> BUFMSG[BUFFERING / CLOCK_LOST]
+  DISCOVER --> INFO[Duration / Tags / Topology]
+  DEBUG --> TOOLS[gst-launch / gst-inspect / GST_DEBUG / DOT]
+  PLATFORM --> SINKS[autovideosink / glimagesink / d3d11videosink]
 ```
 
 ## 学习路径
